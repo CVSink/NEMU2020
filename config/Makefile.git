@@ -1,5 +1,3 @@
-STU_ID = 20192160000
-
 # DO NOT modify the following code!!!
 
 GITFLAGS = -q --author='tracer-NEMU2020 <tjuics2020@163.com>' --no-verify --allow-empty
