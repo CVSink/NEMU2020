@@ -38,17 +38,89 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args) {
+	char* arg = NULL;
+	int N = 0;
+	/* extract the second argument arg */
+	arg = strtok(NULL, " ");
+	/* convert the second argument into integer */
+	if (arg) {
+		int i = 0;
+		int num = 0;
+		while (arg[i] != '\0') {
+			num = num * 10 + (arg[i] - '0');
+			i++;
+		}
+		N = num;
+	}
+	/*execute N times*/
+	cpu_exec(N);
+
+	return 0;
+}
+
+static int cmd_info(char *args) {
+	char* arg = NULL;
+	char type = 'a';
+	/* extract the second argument type */
+	arg = strtok(NULL, " ");
+	if (arg) {
+		type = arg[0];
+	}
+	else {
+		printf("Unknown command '%s'\n", arg);
+	}
+	/*type r: print registors' statement*/
+	if (type == 'r') {
+		/*print uint32_t and uint16_t registors*/
+		int i = 0;
+		for (i = R_EAX; i <= R_EDI; i++) {
+			printf("e%cx\t%d\n", 'a' + i, reg_l(i));
+			printf("%cx\t%d\n", 'a' + i, reg_w(i));
+		}
+		/*print uint8_t registors*/
+		printf("AL\t%d\n",reg_b(R_AL));
+		printf("AH\t%d\n",reg_b(R_AH));
+		printf("BL\t%d\n",reg_b(R_BL));
+		printf("BH\t%d\n",reg_b(R_BH));
+		printf("CL\t%d\n",reg_b(R_CL));
+		printf("CH\t%d\n",reg_b(R_CH));
+		printf("DL\t%d\n",reg_b(R_DL));
+		printf("DH\t%d\n",reg_b(R_DH));
+	}
+	/*type w: print watchpoints' infomation*/
+	else if (type == 'w') {
+		//remain to be implied
+
+
+
+
+	}
+	else {
+		printf("Unknown command '%s'\n", arg);
+	}
+
+	return 0;
+}
+
+
+static int cmd_x(char *EXPR) {
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
 	int (*handler) (char *);
-} cmd_table [] = {
+} cmd_table[] = {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
 
 	/* TODO: Add more commands */
-
+	{ "si", "Execute the next N steps of the program", cmd_si},
+	{ "info", "Print regs state or watchpoints state", cmd_info},
+	{ "x", "Scan the memory", cmd_x},
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
