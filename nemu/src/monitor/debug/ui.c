@@ -75,18 +75,18 @@ static int cmd_info(char *args) {
 		/*print uint32_t and uint16_t registors*/
 		int i = 0;
 		for (i = R_EAX; i <= R_EDI; i++) {
-			printf("e%cx\t%d\n", 'a' + i, reg_l(i));
-			printf("%cx\t%d\n", 'a' + i, reg_w(i));
+			printf("e%cx\t%x\n", 'a' + i, reg_l(i));
+			printf("%cx\t%x\n", 'a' + i, reg_w(i));
 		}
 		/*print uint8_t registors*/
-		printf("AL\t%d\n",reg_b(R_AL));
-		printf("AH\t%d\n",reg_b(R_AH));
-		printf("BL\t%d\n",reg_b(R_BL));
-		printf("BH\t%d\n",reg_b(R_BH));
-		printf("CL\t%d\n",reg_b(R_CL));
-		printf("CH\t%d\n",reg_b(R_CH));
-		printf("DL\t%d\n",reg_b(R_DL));
-		printf("DH\t%d\n",reg_b(R_DH));
+		printf("AL\t%x\n",reg_b(R_AL));
+		printf("AH\t%x\n",reg_b(R_AH));
+		printf("BL\t%x\n",reg_b(R_BL));
+		printf("BH\t%x\n",reg_b(R_BH));
+		printf("CL\t%x\n",reg_b(R_CL));
+		printf("CH\t%x\n",reg_b(R_CH));
+		printf("DL\t%x\n",reg_b(R_DL));
+		printf("DH\t%x\n",reg_b(R_DH));
 	}
 	/*type w: print watchpoints' infomation*/
 	else if (type == 'w') {
