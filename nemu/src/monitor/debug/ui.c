@@ -103,8 +103,60 @@ static int cmd_info(char *args) {
 	return 0;
 }
 
+static int cmd_x(char *args) {
+	/*  Scan the memory */
+	/* Format: x N expr */
+	/* Calculate the expression expr and consider the result as initial memory address */
+	/* Then fetch and print the next N words */
+	char* arg = NULL;
+	int N = 0;
 
-static int cmd_x(char *EXPR) {
+	/* extract the second argument N */
+	arg = strtok(NULL, " ");
+
+	/* check the argument format */
+	if (arg) {
+		int i = 0;
+		while (arg[i] != '\0') {
+			if (arg[i] < '0' || arg[i]>'9') {
+				printf("Unknown command '%s'\n", arg);
+				return 0;
+			}
+			i++;
+		}
+	}
+	/* convert the second argument into integer */
+	if (arg) {
+		int i = 0;
+		int num = 0;
+		while (arg[i] != '\0') {
+			num = num * 10 + (arg[i] - '0');
+			i++;
+		}
+		N = num;
+	}
+	else {
+		printf("Unknown command '%s'\n", arg);
+		return 0;
+	}
+
+	/* extract the third argument expr */
+	arg = strtok(NULL, " ");
+	if (arg) {
+		//calculate the expression
+		//remain to be implied
+
+
+	}
+	else {
+		printf("Unknown command '%s'\n", arg);
+	}
+
+	/* fetch and print memory content */
+	for (int i = 0; i < N; ++i) {
+
+	}
+
 	return 0;
 }
 
