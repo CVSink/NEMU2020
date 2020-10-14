@@ -22,7 +22,7 @@ static struct rule {
 	 * Pay attention to the precedence level of different rules.
 	 */
 
-	{"^[0-9]$",NUM},	//number
+	{"^[0-9]",NUM},	//number
 
 	{" *",	NOTYPE},				// spaces
 	{"\\*", '*'},					//multiply
