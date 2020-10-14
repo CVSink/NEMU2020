@@ -22,10 +22,6 @@ static struct rule {
 	 * Pay attention to the precedence level of different rules.
 	 */
 
-	{" (",	NOTYPE},				// spaces
-	{"\\(", '('},					// left bracket
-	{" )",	NOTYPE},				// spaces
-	{"\\)", ')'},					// right bracket
 	{" *",	NOTYPE},				// spaces
 	{"\\*", '*'},					//multiply
 	{" /",	NOTYPE},				// spaces
