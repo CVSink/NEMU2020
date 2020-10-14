@@ -21,26 +21,6 @@ static struct rule {
 	/* TODO: Add more rules.
 	 * Pay attention to the precedence level of different rules.
 	 */
-	{" 0",	NOTYPE},				// spaces
-	{"\\0", NUM},					// 0
-	{" 1",	NOTYPE},				// spaces
-	{"\\1", NUM},					// 1
-	{" 2",	NOTYPE},				// spaces
-	{"\\2", NUM},					// 2
-	{" 3",	NOTYPE},				// spaces
-	{"\\3", NUM},					// 3
-	{" 4",	NOTYPE},				// spaces
-	{"\\4", NUM},					// 4
-	{" 5",	NOTYPE},				// spaces
-	{"\\5", NUM},					// 5
-	{" 6",	NOTYPE},				// spaces
-	{"\\6", NUM},					// 6
-	{" 7",	NOTYPE},				// spaces
-	{"\\7", NUM},					// 7
-	{" 8",	NOTYPE},				// spaces
-	{"\\8", NUM},					// 8
-	{" 9",	NOTYPE},				// spaces
-	{"\\9", NUM},					// 9
 
 	{" (",	NOTYPE},				// spaces
 	{"\\(", '('},					// left bracket
