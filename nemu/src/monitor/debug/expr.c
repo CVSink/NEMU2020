@@ -23,6 +23,10 @@ static struct rule {
 	 */
 
 	{"^[0-9]",NUM},	//number
+	{" ", NOTYPE},
+	
+	{"\\(", '('},
+	{"\\)", ')'},
 
 	{" *",	NOTYPE},				// spaces
 	{"\\*", '*'},					//multiply
