@@ -99,11 +99,12 @@ static bool make_token(char *e) {
 					tokens[nr_token].type = NUM;
 					int tmpN = substr_len - position;
 					if (tmpN > 32)
-						assert("0");
+						assert(0);
 					int j = 0;
 					for (int i = position; i < substr_len; ++i) {
 						tokens[nr_token].str[j++] = e[i];
 					}
+					tokens[nr_token].str[j] = '\0';
 					nr_token++;
 					break;
 
