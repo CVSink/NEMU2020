@@ -160,6 +160,25 @@ static int cmd_x(char *args) {
 	return 0;
 }
 
+static int cmd_p(char* args) {
+	/* format: p EXPR
+	* calculate the expression EXPR
+	*/
+	char* arg = NULL;
+	uint32_t val = 0;
+	/* extract the second argument expr */
+	arg = strtok(NULL, " ");
+	if(!arg)
+		printf("Unknown command '%s'\n", arg);
+	
+	/* make token and calculate */
+	bool flag = false;
+	val = expr(arg,&flag);
+	
+	printf("EXPR result = %u\n", val);
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -173,6 +192,7 @@ static struct {
 	{ "si", "Execute the next N steps of the program", cmd_si},
 	{ "info", "Print regs state or watchpoints state", cmd_info},
 	{ "x", "Scan the memory", cmd_x},
+	{ "p", "Calculate an expression", cmd_p},
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))

@@ -22,19 +22,14 @@ static struct rule {
 	 * Pay attention to the precedence level of different rules.
 	 */
 
-	{"^[0-9]",NUM},	//number
-	{" ", NOTYPE},
+	{"\\b[0-9]+\\b",NUM},	//number
 	
 	{"\\(", '('},
 	{"\\)", ')'},
 
-	{" *",	NOTYPE},				// spaces
 	{"\\*", '*'},					//multiply
-	{" /",	NOTYPE},				// spaces
 	{"\\/", '/'},					// divide
-	{" -",	NOTYPE},				// spaces
 	{"\\-", '-'},					// decrease
-
 
 	{" +",	NOTYPE},				// spaces
 	{"\\+", '+'},					// plus
@@ -136,6 +131,88 @@ static bool make_token(char *e) {
 	return true; 
 }
 
+int check_parentheses(int p, int q) {
+	/* Check whether tokens[p...q] is surrounded by a pair of parentheses
+	* There are 3 cases
+	* 1. surrounded by a pair of parentheses: ((a+c)-(b*b))	//matched,true
+	* 2. bad expressiom: (a+c))+(a+b)	//false
+	* 3. not matched: (a+b)*(b+c)	//false
+	*/
+	int count = 0;
+	for (int i = p; i < q; ++i) {
+		if (tokens[i].type == '(')
+			count++;
+		else if (tokens[i].type == ')')
+			count--;
+
+		//If count equals 0, the leftmost '(' has been matched.
+		if (count <= 0)
+			return 0;
+	}
+
+	if (count == 1 && tokens[q].type == ')')
+		return 1;
+	else
+		return 0;
+
+	return 0;
+}
+
+uint32_t eval(int p, int q) {
+	/* Assist cmd_p in calculating EXPR
+	* This is a recursive function
+	*/
+	if (p > q) {
+		/* Bad expression */
+		assert(0);
+	}
+	else if (p == q) {
+		/* Single token.
+		* For now this token should be a number
+		* Return the value of the number
+		*/
+		int i = 0;
+		int num = 0;
+		while (tokens[p].str[i] != '\0') {
+			num = num * 10 + (tokens[p].str[i] - '0');
+			i++;
+		}
+		return (uint32_t)num;
+	}
+	else if (check_parentheses(p, q) == 1) {
+		/* The expression is surrounded by a matched pair of parentheses
+		*If that is the case, just throw away the parentheses.
+		*/
+		return eval(p + 1, q - 1);
+	}
+	else {
+		//op is the position of dominant operator in the token expression
+		int op = 0;
+		/* find the dominant operator */
+
+		//remain to be implied
+
+		/******************************/
+
+		uint32_t val1 = eval(p, op - 1);
+		uint32_t val2 = eval(op + 1, q);
+		int op_type = tokens[op].type;
+		
+		switch (op_type) {
+		case '+':
+			return val1 + val2;
+		case '-':
+			return val1 - val2;
+		case '*':
+			return val1 * val2;
+		case '/':
+			return val1 / val2;
+		default:
+			assert(0);
+		}
+	}
+}
+
 uint32_t expr(char *e, bool *success) {
 	if(!make_token(e)) {
 		*success = false;
@@ -143,6 +220,13 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
+
+	/* EXPR has been processed and its elements
+	* are stored in Token array stokens[32] 
+	*/
+	uint32_t val = eval(0, nr_token - 1);
+	return val;
+
 	panic("please implement me");
 	return 0;
 }
