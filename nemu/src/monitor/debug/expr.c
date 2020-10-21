@@ -96,8 +96,8 @@ static bool make_token(char *e) {
 					if (tmpN > 32)
 						assert(0);
 					int j = 0;
-					for (int i = position; i < substr_len; ++i) {
-						tokens[nr_token].str[j++] = e[i];
+					for (int k = 0; k < substr_len; ++k) {
+						tokens[nr_token].str[j++] = substr_start[k];
 					}
 					tokens[nr_token].str[j] = '\0';
 					nr_token++;
