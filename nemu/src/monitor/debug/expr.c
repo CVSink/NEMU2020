@@ -188,15 +188,36 @@ uint32_t eval(int p, int q) {
 	else {
 		//op is the position of dominant operator in the token expression
 		int op = 0;
+		char op_type = tokens[op].type;
 		/* find the dominant operator */
+		int count = 0;
+		for(int i=p;i<=q;++i){
+			if(tokens[i].type == '('){
+				count++;
+			}
+			else if(tokens[i].type == ')'){
+				count--;
+			}
+			else if(tokens[i].type != NUM){
+				if(count == 0){
+					if(tokens[i].type == '+'||tokens[i].type == '-'){
+						op = i;
+						op_type=tokens[op].type;
+					}
+					else{
+						if(op_type != '+'&&op_type != '-'){
+							op = i;
+							op_type=tokens[op].type;
+						}
+					}
+				}
+			}
+		}
 
-		//remain to be implied
-
-		/******************************/
+		/* Calculate */
 
 		uint32_t val1 = eval(p, op - 1);
 		uint32_t val2 = eval(op + 1, q);
-		int op_type = tokens[op].type;
 		
 		switch (op_type) {
 		case '+':
