@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ,NUM
+	NOTYPE = 256, EQ, NUM, NE, AND, OR, NOT, DEREF, HEX, REG
 
 	/* TODO: Add more token types */
 
@@ -33,7 +33,14 @@ static struct rule {
 
 	{" +",	NOTYPE},				// spaces
 	{"\\+", '+'},					// plus
-	{"==", EQ}						// equal
+	{"==", EQ},						// equal
+
+	{"!=", NE},						//not equal
+	{"&&", AND},	//AND
+	{"||", OR},		//OR
+	{"0x", HEX},	//HEX
+	{"\\!", '!'},		//for !=
+	{"\\$", '$'}	//for REG
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -115,6 +122,10 @@ static bool make_token(char *e) {
 					tokens[nr_token++].type = '('; break;
 				case ')':
 					tokens[nr_token++].type = ')'; break;
+				case '!':
+					tokens[nr_token++].type = '!'; break;
+				case '$':
+					tokens[nr_token++].type = '$'; break;
 					default: panic("please implement me");
 				}
 
@@ -218,7 +229,7 @@ uint32_t eval(int p, int q) {
 
 		uint32_t val1 = eval(p, op - 1);
 		uint32_t val2 = eval(op + 1, q);
-		
+
 		switch (op_type) {
 		case '+':
 			return val1 + val2;
@@ -241,6 +252,15 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
+
+	/* Recognize the dereference */
+	for(int i=0;i<nr_token;++i){
+		/* remain to be implied */
+
+
+
+
+	}
 
 	/* EXPR has been processed and its elements
 	* are stored in Token array stokens[32] 
