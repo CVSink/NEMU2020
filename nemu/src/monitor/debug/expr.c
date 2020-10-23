@@ -109,7 +109,16 @@ static bool make_token(char *e) {
 					tokens[nr_token].str[j] = '\0';
 					nr_token++;
 					break;
-
+				case EQ:
+					tokens[nr_token++].type = EQ; break;
+				case NE:
+					tokens[nr_token++].type = NE; break;
+				case AND:
+					tokens[nr_token++].type = AND; break;
+				case OR:
+					tokens[nr_token++].type = OR; break;	
+				case HEX:
+					tokens[nr_token++].type = AND; break;
 				case '+':
 					tokens[nr_token++].type = '+'; break;
 				case '-':
