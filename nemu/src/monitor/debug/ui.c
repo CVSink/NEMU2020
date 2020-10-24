@@ -142,11 +142,15 @@ static int cmd_x(char *args) {
 
 	/* extract the third argument expr */
 	arg = strtok(NULL, " ");
+	swaddr_t addr = 0;
 	if (arg) {
 		//calculate the expression
-		//remain to be implied
-
-
+		bool flag = false;
+		addr = expr(arg, &flag);
+		if(!flag){
+			printf("Bad expression !\n");
+			return 0;
+		}
 	}
 	else {
 		printf("Unknown command '%s'\n", arg);
@@ -154,7 +158,13 @@ static int cmd_x(char *args) {
 
 	/* fetch and print memory content */
 	for (int i = 0; i < N; ++i) {
-
+		uint32_t data = swaddr_read(addr + i*4, 4);
+		printf("0x%0x\t",addr + i*4);
+		for(int j = 0; j < 4; ++j){
+			printf("0x%0x\t", data & 0xff);
+			data = data >> 8;
+		}
+		printf("\n");
 	}
 
 	return 0;
