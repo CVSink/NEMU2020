@@ -353,6 +353,7 @@ uint32_t expr(char *e, bool *success) {
 	* are stored in Token array stokens[32] 
 	*/
 	uint32_t val = eval(0, nr_token - 1);
+	*success = true;
 	return val;
 
 	panic("please implement me");
