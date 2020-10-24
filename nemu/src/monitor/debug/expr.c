@@ -210,6 +210,18 @@ uint32_t eval(int p, int q) {
 		int op = 0;
 		int op_type = tokens[op].type;
 		/* find the dominant operator */
+		//find the HEX
+		bool tag = false;
+		for(int i = p; i < q; ++i){
+			if(tokens[i].type == HEX && tag){
+				op = i;
+				op_type = HEX;
+				break;
+			}
+			if(tokens[i].type == HEX){
+				tag = true;
+			}
+		}
 		//find the !
 		for(int i = p; i < q; ++i){
 			if(tokens[i].type == '!'){
@@ -297,6 +309,11 @@ uint32_t eval(int p, int q) {
 		if(op_type == '!'){
 			uint32_t val = eval(op + 1, q);
 			return !val;
+		}
+
+		if(op_type == HEX){
+			uint32_t val = 0;
+			sscanf(tokens[op].str, "%x", &val);
 		}
 
 		uint32_t val1 = eval(p, op - 1);
