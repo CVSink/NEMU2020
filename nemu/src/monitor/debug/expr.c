@@ -314,6 +314,7 @@ uint32_t eval(int p, int q) {
 		if(op_type == HEX){
 			uint32_t val = 0;
 			sscanf(tokens[op].str, "%x", &val);
+			return (uint32_t)val;
 		}
 
 		uint32_t val1 = eval(p, op - 1);
