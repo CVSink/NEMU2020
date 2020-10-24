@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ, NUM, NE, AND, OR, NOT, DEREF, HEX, REG
+	NOTYPE = 256, EQ, NUM, NE, AND, OR, NOT, DEREF, HEX, REG, NEG
 
 	/* TODO: Add more token types */
 
@@ -37,7 +37,7 @@ static struct rule {
 
 	{"!=", NE},						//not equal
 	{"&&", AND},	//AND
-	{"||", OR},		//OR
+	{"\\|\\|", OR},		//OR
 	{"0x", HEX},	//HEX
 	{"\\!", '!'},		//for !=
 	{"\\$", '$'}	//for REG
@@ -118,7 +118,7 @@ static bool make_token(char *e) {
 				case OR:
 					tokens[nr_token++].type = OR; break;	
 				case HEX:
-					tokens[nr_token++].type = AND; break;
+					tokens[nr_token++].type = HEX; break;
 				case '+':
 					tokens[nr_token++].type = '+'; break;
 				case '-':
@@ -208,8 +208,16 @@ uint32_t eval(int p, int q) {
 	else {
 		//op is the position of dominant operator in the token expression
 		int op = 0;
-		char op_type = tokens[op].type;
+		int op_type = tokens[op].type;
 		/* find the dominant operator */
+		//find the !
+		for(int i = p; i < q; ++i){
+			if(tokens[i].type == '!'){
+				op = i;
+				op_type = '!';
+			}
+		}
+		//find the calculation operator
 		int count = 0;
 		for(int i=p;i<=q;++i){
 			if(tokens[i].type == '('){
@@ -234,7 +242,62 @@ uint32_t eval(int p, int q) {
 			}
 		}
 
+		//find the == and !=
+		count = 0;
+		for(int i = p; i <= q; ++i){
+			if(tokens[i].type == '('){
+				count++;
+			}
+			else if(tokens[i].type == ')'){
+				count--;
+			}
+			if(count == 0){
+				if(tokens[i].type == EQ){
+					op = i;
+					op_type = EQ;
+				}
+				else if(tokens[i].type == NE){
+					op = i;
+					op_type = NE;
+				}
+			}
+		}
+		//find the &&
+		for(int i = p; i <= q; ++i){
+			if(tokens[i].type == '('){
+				count++;
+			}
+			else if(tokens[i].type == ')'){
+				count--;
+			}
+			if(count == 0){
+				if(tokens[i].type == AND){
+					op = i;
+					op_type = AND;
+				}
+			}
+		}
+		//find the ||
+		for(int i = p; i <= q; ++i){
+			if(tokens[i].type == '('){
+				count++;
+			}
+			else if(tokens[i].type == ')'){
+				count--;
+			}
+			if(count == 0){
+				if(tokens[i].type == OR){
+					op = i;
+					op_type = OR;
+				}
+			}
+		}
 		/* Calculate */
+
+		if(op_type == '!'){
+			uint32_t val = eval(op + 1, q);
+			return !val;
+		}
 
 		uint32_t val1 = eval(p, op - 1);
 		uint32_t val2 = eval(op + 1, q);
@@ -248,6 +311,14 @@ uint32_t eval(int p, int q) {
 			return val1 * val2;
 		case '/':
 			return val1 / val2;
+		case EQ:
+			return val1 == val2;
+		case NE:
+			return val1 != val2;
+		case AND:
+			return val1 && val2;
+		case OR:
+			return val1 || val2;
 		default:
 			assert(0);
 		}
@@ -262,13 +333,20 @@ uint32_t expr(char *e, bool *success) {
 
 	/* TODO: Insert codes to evaluate the expression. */
 
-	/* Recognize the dereference */
+	/* Recognize special types */
 	for(int i=0;i<nr_token;++i){
-		/* remain to be implied */
-
-
-
-
+		/* Recognize the dereference */
+		if(tokens[i].type == '*' && (i == 0 || tokens[i - 1].type != NUM)){
+			tokens[i].type = DEREF;
+		}
+		/* Recognize the negative number */
+		if(tokens[i].type == '-' && (i == 0 || tokens[i - 1].type != NUM)){
+			tokens[i].type = NEG; 
+		}
+		/* Recognize the hex number */
+		if(tokens[i].type == HEX && (i + 1 < nr_token && tokens[i + 1].type == NUM)){
+			tokens[i + 1].type = HEX; 
+		}
 	}
 
 	/* EXPR has been processed and its elements
