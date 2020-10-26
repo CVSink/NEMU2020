@@ -90,11 +90,7 @@ static int cmd_info(char *args) {
 	}
 	/*type w: print watchpoints' infomation*/
 	else if (type == 'w') {
-		//remain to be implied
-
-
-
-
+		printWatchpoints();
 	}
 	else {
 		printf("Unknown command '%s'\n", arg);
@@ -189,6 +185,46 @@ static int cmd_p(char* args) {
 	return 0;
 }
 
+static int cmd_x(char* args) {
+	char* arg = NULL;
+	uint32_t val = 0;
+	/* Extract the second argument expr */
+	arg = strtok(NULL, " ");
+	if(!arg)
+		printf("Unknown command '%s'\n", arg);
+	
+	/* Make token and calculate */
+	bool flag = false;
+	val = expr(arg, &flag);
+	/* Set the watchpoint */
+	WP* wp = NULL;
+	wp = new_wp(arg, val);
+	if(wp) {
+		printf("Watchpoint NO. %d has been set.",wp->NO);
+	}
+	return 0;
+}
+
+static int cmd_d(char* args) {
+	char* arg = NULL;
+	int N = 0;
+	/* Extract the second argument N */
+	arg = strtok(NULL, " ");
+	/* Convert the second argument into integer */
+	if (arg) {
+		int i = 0;
+		int num = 0;
+		while (arg[i] != '\0') {
+			num = num * 10 + (arg[i] - '0');
+			i++;
+		}
+		N = num;
+	}
+	/* Delete the NO. N watchpoint */
+	free_wp(N);
+	return 0;
+}
+
 static struct {
 	char *name;
 	char *description;
@@ -203,6 +239,8 @@ static struct {
 	{ "info", "Print regs state or watchpoints state", cmd_info},
 	{ "x", "Scan the memory", cmd_x},
 	{ "p", "Calculate an expression", cmd_p},
+	{ "w", "Set a watchpoint", cmd_w},
+	{ "d", "Delete a watchpoint", cmd_d},
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
