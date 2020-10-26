@@ -185,7 +185,7 @@ static int cmd_p(char* args) {
 	return 0;
 }
 
-static int cmd_x(char* args) {
+static int cmd_w(char* args) {
 	char* arg = NULL;
 	uint32_t val = 0;
 	/* Extract the second argument expr */
@@ -200,7 +200,7 @@ static int cmd_x(char* args) {
 	WP* wp = NULL;
 	wp = new_wp(arg, val);
 	if(wp) {
-		printf("Watchpoint NO. %d has been set.",wp->NO);
+		printf("Watchpoint NO. %d has been set.\n",wp->NO);
 	}
 	return 0;
 }
