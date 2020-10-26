@@ -68,7 +68,7 @@ void printWatchpoints() {
 		printf("There is no watchpint.\n");
 		return;
 	}
-	printf("Watchpoint NO\t EXPR\t VALUE\n");
+	printf("NO\t EXPR\t VALUE\n");
 	while(tmp) {
 		printf("%d\t %s\t %u\n",tmp->NO, tmp->expr, tmp->val);
 		tmp = tmp->next;
@@ -90,7 +90,7 @@ void CheckWatchpoints() {
 		if(tmpVal != tmp->val) {
 			if(tag) {
 				printf("Watchpoints triggered!\n");
-				printf("Watchpoint NO\t EXPR\t VALUE\t CURRENT_VAL\n");
+				printf("NO\t EXPR\t VALUE\t CURRENT_VAL\n");
 			}
 			printf("%d\t %s\t %u\t %u\n",tmp->NO, tmp->expr, tmp->val, tmpVal);
 		}
