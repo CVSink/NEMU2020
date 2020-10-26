@@ -29,15 +29,19 @@ WP* new_wp(char* EXPR, uint32_t VAL) {
 	free_ = free_->next;
 	strcpy(tmp->expr, EXPR);
 	tmp->val = VAL;
+	tmp->next = head;
+	head = tmp;
 	return tmp;
 }
 
 void free_wp(int n) {
 	WP* wp = head;
+	WP* pre = head;
 	while(wp){
 		if(wp->NO == n){
 			break;
 		}
+		pre = wp;
 		wp = wp->next;
 	}
 	if(wp == NULL){
@@ -45,6 +49,13 @@ void free_wp(int n) {
 		return;
 	}
 	WP* tmp = wp;
+	if(wp == pre) {
+		/* The first watchpoint is deleted */
+		head = head->next;
+	}
+	else {
+		pre->next = tmp->next;
+	}
 	tmp->next = free_;
 	free_ = tmp;
 	return;
