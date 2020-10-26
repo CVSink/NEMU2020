@@ -38,7 +38,7 @@ static struct rule {
 	{"!=", NE},						//not equal
 	{"&&", AND},	//AND
 	{"\\|\\|", OR},		//OR
-	{"0x", HEX},	//HEX
+	{"\\b0x[0-9]+\\b", HEX},
 	{"\\!", '!'},		//for !=
 	{"\\$", '$'}	//for REG
 };
@@ -109,6 +109,18 @@ static bool make_token(char *e) {
 					tokens[nr_token].str[j] = '\0';
 					nr_token++;
 					break;
+				case HEX:
+					tokens[nr_token].type = HEX;
+					tmpN = substr_len - position;
+					if (tmpN > 32)
+						assert(0);
+					j = 0;
+					for (int k = 0; k < substr_len; ++k) {
+						tokens[nr_token].str[j++] = substr_start[k];
+					}
+					tokens[nr_token].str[j] = '\0';
+					nr_token++;
+					break;
 				case EQ:
 					tokens[nr_token++].type = EQ; break;
 				case NE:
@@ -117,8 +129,6 @@ static bool make_token(char *e) {
 					tokens[nr_token++].type = AND; break;
 				case OR:
 					tokens[nr_token++].type = OR; break;	
-				case HEX:
-					tokens[nr_token++].type = HEX; break;
 				case '+':
 					tokens[nr_token++].type = '+'; break;
 				case '-':
@@ -191,6 +201,11 @@ uint32_t eval(int p, int q) {
 		* For now this token should be a number
 		* Return the value of the number
 		*/
+		if(tokens[p].type == HEX){
+			uint32_t val = 0;
+			sscanf(tokens[p].str, "%x", &val);
+			return (uint32_t)val;
+		}
 		int i = 0;
 		int num = 0;
 		while (tokens[p].str[i] != '\0') {
@@ -210,18 +225,6 @@ uint32_t eval(int p, int q) {
 		int op = 0;
 		int op_type = tokens[op].type;
 		/* find the dominant operator */
-		//find the HEX
-		bool tag = false;
-		for(int i = p; i < q; ++i){
-			if(tokens[i].type == HEX && tag){
-				op = i;
-				op_type = HEX;
-				break;
-			}
-			if(tokens[i].type == HEX){
-				tag = true;
-			}
-		}
 		//find the !
 		for(int i = p; i < q; ++i){
 			if(tokens[i].type == '!'){
@@ -311,12 +314,6 @@ uint32_t eval(int p, int q) {
 			return !val;
 		}
 
-		if(op_type == HEX){
-			uint32_t val = 0;
-			sscanf(tokens[op].str, "%x", &val);
-			return (uint32_t)val;
-		}
-
 		uint32_t val1 = eval(p, op - 1);
 		uint32_t val2 = eval(op + 1, q);
 
@@ -360,10 +357,6 @@ uint32_t expr(char *e, bool *success) {
 		/* Recognize the negative number */
 		if(tokens[i].type == '-' && (i == 0 || tokens[i - 1].type != NUM)){
 			tokens[i].type = NEG; 
-		}
-		/* Recognize the hex number */
-		if(tokens[i].type == HEX && (i + 1 < nr_token && tokens[i + 1].type == NUM)){
-			tokens[i + 1].type = HEX; 
 		}
 	}
 
