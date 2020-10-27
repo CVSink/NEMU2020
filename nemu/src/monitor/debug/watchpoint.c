@@ -76,7 +76,7 @@ void printWatchpoints() {
 	return;
 }
 
-void CheckWatchpoints() {
+bool CheckWatchpoints() {
 	/* Check if any watchpoints' val are changed */
 	WP* tmp = head;
 	uint32_t tmpVal = 0;
@@ -89,6 +89,7 @@ void CheckWatchpoints() {
 		}
 		if(tmpVal != tmp->val) {
 			if(tag) {
+				tag = false;
 				printf("Watchpoints triggered!\n");
 				printf("NO\t EXPR\t VALUE\t CURRENT_VAL\n");
 			}
@@ -96,5 +97,5 @@ void CheckWatchpoints() {
 		}
 		tmp = tmp->next;
 	}
-	return;
+	return !tag;
 }

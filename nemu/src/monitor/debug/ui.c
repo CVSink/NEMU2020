@@ -28,7 +28,16 @@ char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
-	cpu_exec(-1);
+	uint32_t times = -1;
+	while(times--) {
+		cpu_exec(1);
+		bool flag = CheckWatchpoints();
+		if(flag) {
+			nemu_state = STOP;
+			return 0;
+		}
+	}
+//	cpu_exec(-1);
 	return 0;
 }
 
@@ -54,7 +63,15 @@ static int cmd_si(char *args) {
 		N = num;
 	}
 	/*execute N times*/
-	cpu_exec(N);
+	while(N--) {
+		cpu_exec(1);
+		bool flag = CheckWatchpoints();
+		if(flag) {
+			nemu_state = STOP;
+			return 0;
+		}
+	}
+//	cpu_exec(N);
 
 	return 0;
 }
