@@ -99,3 +99,7 @@ bool CheckWatchpoints() {
 	}
 	return !tag;
 }
+
+bool haveWatchpoints() {
+	return head == NULL ? false : true;
+}
