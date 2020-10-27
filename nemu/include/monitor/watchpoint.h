@@ -17,5 +17,6 @@ WP* new_wp(char*, uint32_t);
 void free_wp(int);
 void printWatchpoints();
 bool CheckWatchpoints();
+bool haveWatchpoints();
 
 #endif
