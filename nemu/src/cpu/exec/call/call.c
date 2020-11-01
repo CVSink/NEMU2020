@@ -6,5 +6,5 @@ make_helper(call) {
     
     print_asm("call %u", displacement);
     
-	return 1 + (int)displacement;
+	return 5 + (int)displacement;
 }
