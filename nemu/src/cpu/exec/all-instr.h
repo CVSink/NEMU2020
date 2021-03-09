@@ -28,3 +28,5 @@
 
 #include "call/call.h"
 #include "stack/push.h"
+
+#include "logic/test.h"
