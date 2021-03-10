@@ -31,3 +31,4 @@
 
 #include "logic/test.h"
 #include "trans/je.h"
+#include "arith/cmp.h"
