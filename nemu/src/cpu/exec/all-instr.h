@@ -34,3 +34,4 @@
 #include "arith/cmp.h"
 #include "stack/pop.h"
 #include "trans/ret.h"
+#include "arith/add.h"
