@@ -35,3 +35,4 @@
 #include "stack/pop.h"
 #include "trans/ret.h"
 #include "arith/add.h"
+#include "arith/adc.h"
