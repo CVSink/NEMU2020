@@ -40,3 +40,4 @@
 #include "arith/sbb.h"
 #include "logic/setcc.h"
 #include "trans/jmp.h"
+#include "trans/jcc.h"
